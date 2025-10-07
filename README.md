@@ -48,18 +48,28 @@ The compose file launches nginx, Postgres, Redis, MinIO, monitoring services, an
 | **Docker Compose VPS (Hetzner / DigitalOcean / AWS Lightsail)** | full control                    | You own the box, TLS via Caddy/NGINX |
 | **Kubernetes (ArgoCD / Helm)**                                  | you already run Brain-Swarm Ops | integrate it into that cluster       |
 
-### Vercel + Render Deployment
+### Docker Compose VPS Deployment
 
-1. **Frontend (Vercel)**:
-   - Connect your GitHub repo to Vercel.
-   - Set build settings: Root Directory `frontend`, Build Command `npm run build`, Output Directory `.next`.
-   - Set environment variables: `NEXT_PUBLIC_API_URL` to your Render backend URL, `NEXT_PUBLIC_WS_URL` to `wss://your-render-app.onrender.com`.
+For full control on your own VPS (Hetzner, DigitalOcean, AWS Lightsail):
 
-2. **Backend (Render)**:
-   - Create a new Web Service on Render, connect to GitHub.
-   - Set Root Directory to `backend`, Docker as runtime.
-   - Set environment variables: `DATABASE_URL`, `REDIS_URL`, etc.
-   - Deploy.
+1. **Provision a VPS** with Docker and Docker Compose installed.
+
+2. **Clone the repo** and navigate to the project directory.
+
+3. **Update Caddyfile**: Replace `your-domain.com` with your actual domain in `infra/Caddyfile`.
+
+4. **Set environment variables**: Create a `.env` file or set in docker-compose.yml for secrets like `OPENAI_API_KEY`, database passwords, etc.
+
+5. **Run the stack**:
+   ```bash
+   docker-compose up -d
+   ```
+
+6. **Configure DNS**: Point your domain to the VPS IP.
+
+Caddy will automatically obtain TLS certificates from Let's Encrypt.
+
+The stack includes Caddy for reverse proxy and TLS, all services, and monitoring.
 
 ## Contributing
 

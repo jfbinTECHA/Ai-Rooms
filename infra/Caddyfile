@@ -1,0 +1,26 @@
+# Replace your-domain.com with your actual domain
+your-domain.com {
+    # API routes
+    handle /api/* {
+        reverse_proxy backend:8000
+    }
+
+    # WebSocket routes
+    handle /ws* {
+        reverse_proxy websocket:8001 {
+            # WebSocket headers
+            header_up Upgrade {>Upgrade}
+            header_up Connection {>Connection}
+        }
+    }
+
+    # Frontend
+    handle {
+        reverse_proxy frontend:3000
+    }
+}
+
+# Optional: Redirect HTTP to HTTPS
+http://your-domain.com {
+    redir https://{host}{uri} permanent
+}
